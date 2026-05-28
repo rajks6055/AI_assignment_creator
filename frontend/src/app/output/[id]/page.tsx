@@ -15,7 +15,7 @@ export default function AssignmentOutput() {
   useEffect(() => {
     const fetchPaper = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/papers/${params.id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/papers/${id}`);
         const data = await response.json();
         
         if (data.success && data.paper.generatedContent) {
