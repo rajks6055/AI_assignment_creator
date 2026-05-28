@@ -193,18 +193,20 @@ export default function DashboardLayout() {
                           {assignment.criteria?.subject ? `Assignment on ${assignment.criteria.subject}` : "General Assignment"}
                         </h3>
                         <div className="relative">
-                          {/* CHANGED: Now uses an onClick handler instead of hover */}
+                          {/* CHANGED: Bulletproof click handler to prevent auto-closing */}
                           <button 
                             onClick={(e) => {
-                              e.stopPropagation(); // Prevents the click-away listener from immediately closing it
+                              e.preventDefault();
+                              e.stopPropagation(); 
+                              e.nativeEvent.stopImmediatePropagation(); // THE MAGIC FIX
                               setOpenMenuId(openMenuId === assignment._id ? null : assignment._id);
                             }}
                             className="text-gray-400 hover:text-gray-900 p-1"
                           >
-                            <MoreVertical size={20} />
+                            <MoreVertical size={20} className="pointer-events-none" />
                           </button>
                           
-                          {/* CHANGED: Menu visibility is now tied to the openMenuId state */}
+                          {/* Menu visibility is now tied to the openMenuId state */}
                           {openMenuId === assignment._id && (
                             <div className="absolute right-0 top-full mt-1 w-32 bg-white rounded-xl shadow-lg border border-gray-100 z-20">
                               <Link 
