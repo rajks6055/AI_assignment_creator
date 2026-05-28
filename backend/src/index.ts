@@ -12,7 +12,6 @@ import { QueueEvents } from "bullmq";
 import "./queue/worker";
 import apiRoutes from "./routes/api";
 
-
 connectDB();
 
 const app = express();
@@ -26,11 +25,13 @@ app.use(cors({
 app.use(express.json());
 
 app.use("/api/papers", apiRoutes);
+
 // Create HTTP Server for both Express and WebSockets
 const httpServer = createServer(app);
 
 // Initialize Socket.io WebSocket Server
-const io = new Server(server, {
+// 🚨 CHANGED: 'server' is now 'httpServer'
+const io = new Server(httpServer, {
   cors: {
     origin: ['http://localhost:3000', 'https://ai-assignment-creator-puce.vercel.app'],
     methods: ['GET', 'POST']
@@ -66,6 +67,7 @@ queueEvents.on("completed", ({ jobId }) => {
 // ==========================================
 
 // Start Server
+// 🚨 CHANGED: Make sure this uses 'httpServer' too
 httpServer.listen(PORT, () => {
-  console.log(`🚀 Server safely running on http://localhost:${PORT}`);
+  console.log(`🚀 Server safely running on port ${PORT}`);
 });
