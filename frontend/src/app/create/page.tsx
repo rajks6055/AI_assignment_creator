@@ -71,7 +71,7 @@ const [selectedFile, setSelectedFile] = useState<File | null>(null);
       }
 
       // 4. THE FETCH CALL
-      const response = await fetch("http://localhost:5000/api/papers/generate", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/papers/generate`, {
         method: "POST",
         body: formData, 
       });
@@ -80,7 +80,7 @@ const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
       // 5. WebSocket Logic (Kept exactly as you had it)
       if (data.success) {
-        const socket = io("http://localhost:5000");
+        const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
         
         socket.on("paper-ready", (socketData) => {
           if (socketData.paperId === data.paperId) {
