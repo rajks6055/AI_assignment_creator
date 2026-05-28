@@ -260,7 +260,7 @@ export default function DashboardLayout() {
                   <Image 
                   src="/Illustrations.png" 
                   alt="A description of the image for screen readers" 
-                  width={800} 
+                  width={600} 
                   height={400} 
                   className="rounded-lg shadow-md"
                 />
