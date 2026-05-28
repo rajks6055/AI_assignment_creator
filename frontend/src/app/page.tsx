@@ -24,7 +24,7 @@ export default function DashboardLayout() {
     const fetchAssignments = async () => {
       try {
         // Change this URL if your backend runs on a different port!
-        const response = await fetch("http://localhost:5000/api/papers"); 
+        const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/papers"); 
         const data = await response.json();
         
         if (data.success) {
@@ -49,7 +49,7 @@ export default function DashboardLayout() {
     if (!window.confirm("Are you sure you want to delete this assignment?")) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/papers/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/papers/${id}`, {
         method: "DELETE",
       });
       
