@@ -127,7 +127,7 @@ const [selectedFile, setSelectedFile] = useState<File | null>(null);
       <aside className="hidden lg:flex w-64 bg-white rounded-2xl border border-gray-100 shadow-sm flex-col justify-between p-4 shrink-0">
         <div>
           <div className="flex px-2 mb-8 mt-2">
-            <Image src="/logo.png" alt="VedaAI Logo" width={40} height={40} className="rounded-xl drop-shadow-sm object-contain" />
+            <Image src="/logo.png" alt="VedaAI Logo" width={48} height={48} className="rounded-xl drop-shadow-sm object-contain" />
             <span className="text-2xl font-bold text-gray-900 leading-none">VedaAI</span>
           </div>
           <button className="w-full bg-[#2b2b2b] border-[3px] border-[#e86a44] text-white rounded-full py-2.5 px-4 flex items-center justify-center gap-2 font-medium hover:bg-[#1a1a1a] transition-all mb-8 shadow-sm">

@@ -84,7 +84,7 @@ export default function DashboardLayout() {
       {/* ========================================= */}
       <aside className="hidden lg:flex w-64 bg-white rounded-2xl border border-gray-100 shadow-sm flex-col justify-between p-4 shrink-0">
         <div>
-          <div className="flex items-center gap-3 px-2 mb-8 mt-2">
+          <div className="flex px-2 mb-8 mt-2">
             <Image src="/logo.png" alt="VedaAI Logo" width={48} height={48} className="rounded-xl drop-shadow-sm object-contain" />
             <span className="text-2xl font-bold text-gray-900 leading-none">VedaAI</span>
           </div>
