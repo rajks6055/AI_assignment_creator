@@ -28,6 +28,8 @@ export default function DashboardLayout() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/papers`); 
         const data = await response.json();
+
+        console.log("REAL BACKEND DATA:", data);
         
         if (data.success) {
           // Sort by newest first
