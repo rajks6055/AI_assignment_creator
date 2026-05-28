@@ -256,7 +256,7 @@ export default function DashboardLayout() {
               <div className="max-w-md w-full flex flex-col items-center text-center px-4">
                 <div className="w-40 h-40 md:w-48 md:h-48 bg-gray-200 rounded-full flex items-center justify-center mb-8 relative">
                   <Image 
-                  src="/illustrations.png" 
+                  src="/Illustrations.png" 
                   alt="A description of the image for screen readers" 
                   width={800} 
                   height={400} 
