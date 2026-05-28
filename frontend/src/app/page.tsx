@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Bell, Home, Users, FileText, Wrench, BookOpen, Settings, Plus, Menu, Sparkles, Filter, Search, MoreVertical, Loader2 } from "lucide-react";
@@ -18,13 +18,15 @@ interface Paper {
 export default function DashboardLayout() {
   const [assignments, setAssignments] = useState<Paper[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // NEW: State to track which menu is currently open
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   // Fetch data from your backend when the page loads
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
-        // Change this URL if your backend runs on a different port!
-        const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/papers"); 
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/papers`); 
         const data = await response.json();
         
         if (data.success) {
@@ -44,6 +46,13 @@ export default function DashboardLayout() {
     fetchAssignments();
   }, []);
 
+  // NEW: Closes the dropdown if you click anywhere else on the screen
+  useEffect(() => {
+    const handleClickOutside = () => setOpenMenuId(null);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
   const handleDelete = async (id: string) => {
     // Add a quick confirmation so users don't accidentally delete things!
     if (!window.confirm("Are you sure you want to delete this assignment?")) return;
@@ -56,8 +65,6 @@ export default function DashboardLayout() {
       const data = await response.json();
 
       if (data.success) {
-        // This is the magic! It instantly removes the paper from the screen 
-        // without needing to refresh the browser.
         setAssignments(assignments.filter((assignment) => assignment._id !== id));
       } else {
         alert("Failed to delete the assignment.");
@@ -180,25 +187,43 @@ export default function DashboardLayout() {
               <div className="flex-1 overflow-y-auto pb-32 custom-scrollbar">
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   {assignments.map((assignment) => (
-                    <div key={assignment._id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col justify-between h-40 hover:shadow-md transition-shadow group relative">
+                    <div key={assignment._id} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col justify-between h-40 hover:shadow-md transition-shadow relative">
                       <div className="flex justify-between items-start">
                         <h3 className="font-bold text-lg text-gray-900 capitalize">
                           {assignment.criteria?.subject ? `Assignment on ${assignment.criteria.subject}` : "General Assignment"}
                         </h3>
-                        <div className="relative group/menu">
-                          <button className="text-gray-400 hover:text-gray-900 p-1">
+                        <div className="relative">
+                          {/* CHANGED: Now uses an onClick handler instead of hover */}
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevents the click-away listener from immediately closing it
+                              setOpenMenuId(openMenuId === assignment._id ? null : assignment._id);
+                            }}
+                            className="text-gray-400 hover:text-gray-900 p-1"
+                          >
                             <MoreVertical size={20} />
                           </button>
-                          {/* Dropdown Menu (Hidden by default, shown on hover) */}
-                          <div className="absolute right-0 top-full mt-1 w-32 bg-white rounded-xl shadow-lg border border-gray-100 hidden group-hover/menu:block z-20">
-                            <Link href={`/output/${assignment._id}`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl">View Assignment</Link>
-                            <button 
-                              onClick={() => handleDelete(assignment._id)} 
-                              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-xl transition-colors"
-                            >
-                              Delete
-                            </button>
-                          </div>
+                          
+                          {/* CHANGED: Menu visibility is now tied to the openMenuId state */}
+                          {openMenuId === assignment._id && (
+                            <div className="absolute right-0 top-full mt-1 w-32 bg-white rounded-xl shadow-lg border border-gray-100 z-20">
+                              <Link 
+                                href={`/output/${assignment._id}`} 
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl"
+                              >
+                                View Assignment
+                              </Link>
+                              <button 
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  handleDelete(assignment._id);
+                                }} 
+                                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-xl transition-colors"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="flex justify-between items-center text-xs font-bold text-gray-600 mt-auto">
